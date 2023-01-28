@@ -37,6 +37,6 @@ trap 'cleanup; trap "" EXIT; exit "${xorg:-0}"' EXIT HUP TERM QUIT
 trap 'DISPLAY=:$tty "${@:-$cfgdir/sxrc}" & wait "$!"' USR1
 
 xauth add :"$tty" MIT-MAGIC-COOKIE-1 "$(od -An -N16 -tx /dev/urandom | tr -d ' ')"
-(trap '' USR1 && exec Xorg :"$tty" vt"$tty" -keeptty -noreset -auth "$XAUTHORITY") &
+(trap '' USR1 && exec Xorg :"$tty" -nolisten tcp vt"$tty" -keeptty -noreset -auth "$XAUTHORITY") &
 server=$!
 wait "$server"
