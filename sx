@@ -2,6 +2,12 @@
 # sx - start an xorg server
 # requires xauth Xorg /dev/urandom
 
+if [[ $1 == '--help' || $1 == '-h' ]]; then
+  echo "Usage:       sx <window-manager> <xsession-boolean>"
+  echo "Description: Starts an X server"
+  exit 1
+fi
+
 cleanup() {
     if [ "$server" ] && kill -0 "$server" 2> /dev/null; then
         kill "$server"
@@ -34,9 +40,25 @@ trap 'cleanup; trap "" EXIT; exit "${xorg:-0}"' EXIT HUP TERM QUIT
 # to accept connections if it inherited a USR1 signal with a SIG_IGN
 # disposition.  Consequently a client may be started directly from a USR1
 # signal handler and obviate the need to poll for server readiness.
-trap 'DISPLAY=:$tty "${@:-$cfgdir/sxrc}" & wait "$!"' USR1
+trap 'DISPLAY=:$tty $cfgdir/sxrc "$@" & wait "$!"' USR1
 
-xauth add :"$tty" MIT-MAGIC-COOKIE-1 "$(od -An -N16 -tx /dev/urandom | tr -d ' ')"
-(trap '' USR1 && exec Xorg :"$tty" -nolisten tcp vt"$tty" -keeptty -noreset -auth "$XAUTHORITY") &
+xauth add :"$tty" \
+      MIT-MAGIC-COOKIE-1 "$(od -An -N16 -tx /dev/urandom | tr -d ' ')"
+
+case $0 in
+  *-mouse-new)
+    layout=LayoutMouseNew0;;
+  *-mouse)
+    layout=LayoutMouse0;;
+  *)
+    layout=LayoutMouseless0;;
+esac
+
+(trap '' USR1 && \
+   exec Xorg ":$tty" "vt${tty}"     \
+        -f 0 -nolisten tcp -noreset \
+        -layout "$layout"           \
+        -auth "$XAUTHORITY") &
+
 server=$!
 wait "$server"
