@@ -59,9 +59,9 @@ case $0 in
 esac
 
 (trap '' USR1 && \
-   exec Xorg ":$tty" "vt${tty}"     \
+   exec Xorg ":$tty" "vt${tty}" \
         -f 0 -nolisten tcp -noreset \
-        -layout "$layout"           \
+        -layout "$layout" \
         -auth "$XAUTHORITY") &
 
 server=$!
