@@ -49,19 +49,9 @@ trap 'DISPLAY=:$tty $cfgdir/sxrc "$@" & wait "$!"' USR1
 xauth add :"$tty" \
       MIT-MAGIC-COOKIE-1 "$(od -An -N16 -tx /dev/urandom | tr -d ' ')"
 
-case $0 in
-  *-mouse-new)
-    layout=LayoutMouseNew0;;
-  *-mouse)
-    layout=LayoutMouse0;;
-  *)
-    layout=LayoutMouseless0;;
-esac
-
 (trap '' USR1 && \
    exec Xorg ":$tty" "vt${tty}" \
         -f 0 -nolisten tcp -noreset \
-        -layout "$layout" \
         -auth "$XAUTHORITY") &
 
 server=$!
