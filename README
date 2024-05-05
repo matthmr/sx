@@ -1,5 +1,15 @@
 sx <https://github.com/Earnestly/sx>
 
+NOTE
+
+  This is the mH fork of sx. My changes are mostly to fit this program with
+  `session', a script of mine that serves as a 'login manager'.
+
+  If you are experiencing the problem caused by having CONFIG_SIMPLEDRM=y
+  enabled in your kernel's config that your only GPU is exposed as
+  `/dev/dri/card1', instead of `/dev/dri/card0', use the `master-simpledrm-fix'
+  branch
+
 INTRODUCTION
 
   sx is a simple alternative to both xinit(1) and startx(1) for starting
