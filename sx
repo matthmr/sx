@@ -50,6 +50,7 @@ xauth add :"$tty" \
       MIT-MAGIC-COOKIE-1 "$(od -An -N16 -tx /dev/urandom | tr -d ' ')"
 
 (trap '' USR1 && \
+   KMSDEVICE="/dev/dri/card1" \
    exec Xorg ":$tty" "vt${tty}" \
         -f 0 -nolisten tcp -noreset \
         -auth "$XAUTHORITY") &
